@@ -96,13 +96,45 @@ function M.PrepareRealFFT_2D (out, size, arr, cols, ncols, na)
 	local oi, ai = 1, 1
 
 	while ai <= na do
-		for i = 1, cols do
+		for _ = 1, cols do
 			out[oi], oi, ai = arr[ai], oi + 1, ai + 1
 		end
 
-		for i = cols + 1, ncols do
+		for _ = cols + 1, ncols do
 			out[oi], oi = 0, oi + 1
 		end
+	end
+
+	for i = oi, size do
+		out[i] = 0
+	end
+end
+
+--- DOCME
+--
+-- @array out RRR
+-- @uint size Sss
+-- @array arr MMM
+-- @uint i XXX
+-- @uint j YYY
+-- @uint cols C
+-- @uint rows R
+-- @uint ncols ddfdf
+function M.PrepareRealFFT_Submatrix2D (out, size, arr, i, j, cols, rows, ncols)
+	local oi, apos, extra = 1, (j - 1) * cols, ncols - cols
+
+	for _ = 1, rows do
+		local ai = apos + i
+
+		for _ = 1, cols do
+			out[oi], oi, ai = arr[ai], oi + 1, ai + 1
+		end
+
+		for _ = 1, extra do
+			out[oi], oi = 0, oi + 1
+		end
+
+		apos = apos + cols
 	end
 
 	for i = oi, size do
@@ -133,7 +165,7 @@ function M.PrepareSeparateFFTs_1D (out1, out2, size, arr1, m, arr2, n)
 	end
 
 	for i = m + 1, n do
-		out1[j], out1[j + 1], out2[j], out2[j + 1], j = 0, arr1[i], 0, 0, 0, j + 2
+		out1[j], out1[j + 1], out2[j], out2[j + 1], j = 0, arr1[i], 0, 0, j + 2
 	end
 
 	for i = j, 2 * size, 2 do
@@ -161,7 +193,7 @@ function M.PrepareSeparateFFTs_2D (out1, out2, m, n, arr1, cols1, arr2, cols2, n
 
 	local j, ii1, ii2, m2 = 1, 1, 1, 2 * m
 
-	for row = 1, n do
+	for _ = 1, n do
 		local oi1, oi2 = j, j
 
 		for _ = 1, m2, 2 do
@@ -338,7 +370,7 @@ function M.PrepareTwoGoertzels_2D (out1, out2, m, n, arr1, cols1, arr2, cols2, n
 
 	local j, ii1, ii2 = 1, 1, 1
 
-	for row = 1, n do
+	for _ = 1, n do
 		local oi1, oi2 = j, j
 
 		for _ = 1, m do
