@@ -120,13 +120,16 @@ end
 -- @uint cols C
 -- @uint rows R
 -- @uint ncols ddfdf
-function M.PrepareRealFFT_Submatrix2D (out, size, arr, i, j, cols, rows, ncols)
-	local oi, apos, extra = 1, (j - 1) * cols, ncols - cols
+-- @uint stride SD
+function M.PrepareRealFFT_Submatrix2D (out, size, arr, i, j, cols, rows, ncols, stride)
+	stride = stride or ncols
 
-	for _ = 1, rows do
+	local oi, apos, extra = 1, (j - 1) * stride, ncols - cols
+
+	for _r = 1, rows do
 		local ai = apos + i
 
-		for _ = 1, cols do
+		for _c = 1, cols do
 			out[oi], oi, ai = arr[ai], oi + 1, ai + 1
 		end
 
@@ -134,7 +137,7 @@ function M.PrepareRealFFT_Submatrix2D (out, size, arr, i, j, cols, rows, ncols)
 			out[oi], oi = 0, oi + 1
 		end
 
-		apos = apos + cols
+		apos = apos + stride
 	end
 
 	for i = oi, size do
