@@ -96,6 +96,12 @@ function M.PrepareRealFFT_2D (out, size, arr, cols, ncols, na)
 	local oi, ai = 1, 1
 
 	while ai <= na do
+		local ncols = na - ai + 1
+
+		if ncols < cols then
+			cols = ncols
+		end
+
 		for _ = 1, cols do
 			out[oi], oi, ai = arr[ai], oi + 1, ai + 1
 		end
@@ -126,10 +132,10 @@ function M.PrepareRealFFT_Submatrix2D (out, size, arr, i, j, cols, rows, ncols, 
 
 	local oi, apos, extra = 1, (j - 1) * stride, ncols - cols
 
-	for _r = 1, rows do
+	for _ = 1, rows do
 		local ai = apos + i
 
-		for _c = 1, cols do
+		for _ = 1, cols do
 			out[oi], oi, ai = arr[ai], oi + 1, ai + 1
 		end
 
